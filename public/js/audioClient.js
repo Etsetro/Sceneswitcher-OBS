@@ -31,6 +31,8 @@ function addAudioStream(stream) {
     let arr = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(arr);
     let values = arr.reduce((a, b) => a + b, 0);
+    visualizer.innerHTML = Math.round(values / 1000);
+  };
 
     visualizer.innerHTML = Math.round(values / 100);
   };
