@@ -1,18 +1,16 @@
-const express = require("express");
 const OBSWebSocket = require("obs-websocket-js");
-const socket = require("socket.io");
+const express = require("express");
 
-const app = express();
-const server = require("http").createServer(app);
+const app = require("express")();
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
 
 const PORT = 3000;
 
-// const obs = new OBSWebSocket();
-// obs
-//   .connect({ address: "localhost:4444", password: "secret" })
-//   .catch((err) => console.log(err));
-
-const io = socket(server);
+const obs = new OBSWebSocket();
+obs
+  .connect({ address: "localhost:4444", password: "secret" })
+  .catch((err) => console.log(err));
 
 app.use(express.static("./public"));
 
@@ -38,10 +36,6 @@ function changeScene() {
     .catch((err) => console.log(err));
 }
 
-// setInterval(() => {
-//   changeScene();
-// }, 1000);
-
-server.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
