@@ -81,6 +81,15 @@ input[type="text"] {
   outline: none;
   width: 100%;
   border: 2px solid black;
+  transition: 0.4s ease-out;
+}
+
+input[type="text"].correct {
+  border: 2px solid rgb(69, 202, 80);
+}
+
+input[type="text"].incorrect {
+  border: 2px solid rgb(255, 89, 89);
 }
 
 input[type="range"] {

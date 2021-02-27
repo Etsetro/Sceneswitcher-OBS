@@ -97,6 +97,16 @@ input[type="text"] {
   outline: none;
   width: 100%;
   border: 2px solid black;
+  -webkit-transition: 0.4s ease-out;
+  transition: 0.4s ease-out;
+}
+
+input[type="text"].correct {
+  border: 2px solid #45ca50;
+}
+
+input[type="text"].incorrect {
+  border: 2px solid #ff5959;
 }
 
 input[type="range"] {

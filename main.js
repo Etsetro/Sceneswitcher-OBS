@@ -15,7 +15,7 @@ obs
 app.use(express.static("./public"));
 
 io.on("connection", (socket) => {
-  socket.on("audioInput", (body) => {
+  io.on("audioInput", (body) => {
     console.log({
       volume: parseInt(body.volume),
       id: body.id,
@@ -28,6 +28,16 @@ io.on("connection", (socket) => {
       scene: body.scene,
       limit: -25,
     });
+  });
+  socket.on("input check", ({ index, value }) => {
+    obs
+      .send("SetCurrentScene", { "scene-name": value })
+      .then((data) => {
+        if (data) {
+          socket.emit("correct input", index);
+        }
+      })
+      .catch((err) => socket.emit("incorrect input", index));
   });
 });
 function changeScene() {

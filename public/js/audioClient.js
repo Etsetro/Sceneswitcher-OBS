@@ -1,4 +1,7 @@
+const socket = io();
+
 let visualizer = document.querySelector(".visualizer");
+let volumes = [];
 
 if (navigator.mediaDevices.getUserMedia) {
   navigator.mediaDevices
@@ -31,6 +34,7 @@ function addAudioStream(stream) {
     let arr = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(arr);
     let values = arr.reduce((a, b) => a + b, 0);
+
     visualizer.innerHTML = Math.round(values / 1000);
   };
 }
@@ -40,18 +44,35 @@ function handleSlider(index, val) {
   output.innerHTML = val;
 }
 
-function handleInput(val) {}
+function handleInput(i, val) {
+  console.log(val);
+  socket.emit("input check", { index: i, value: val });
+}
 
 function handleSubmit() {}
+
+socket.on("correct input", (index) => {
+  const inputElement = document.querySelector(`.scene-name-${index}`);
+  inputElement.classList.remove("incorrect");
+  inputElement.classList.add("correct");
+});
+
+socket.on("incorrect input", (index) => {
+  const inputElement = document.querySelector(`.scene-name-${index}`);
+  inputElement.classList.remove("correct");
+  inputElement.classList.add("incorrect");
+});
 
 window.onload = () => {
   for (let i = 0; i < 4; i++) {
     document.querySelector(".scenes").innerHTML += `
       <div>
+        <div>
           <h3>Scene name</h3>
-          <input type="text" class="scene-name-${i}" onchange="handleInput(${i}, this.value)">
+          <input type="text" class="scene-name-${i}" onkeyup="handleInput(${i}, this.value)">
           <input type=range class="volume-slider" min=0 max=100 value=1 step=1 oninput="handleSlider(${i}, this.value)">
-          <h2 class="volume-output-${i}">1</h2>
+        </div>
+        <h2 class="volume-output-${i}">1</h2>
       </div>
     `;
   }
