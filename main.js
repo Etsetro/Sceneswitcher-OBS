@@ -15,7 +15,7 @@ obs
 app.use(express.static("./public"));
 
 io.on("connection", (socket) => {
-  io.on("audioInput", (body) => {
+  socket.on("audio input", (body) => {
     console.log({
       volume: parseInt(body.volume),
       id: body.id,
@@ -29,15 +29,47 @@ io.on("connection", (socket) => {
       limit: -25,
     });
   });
+
   socket.on("input check", ({ index, value }) => {
     obs
-      .send("SetCurrentScene", { "scene-name": value })
+      .send("GetSceneList")
       .then((data) => {
-        if (data) {
-          socket.emit("correct input", index);
+        for (i of data.scenes) {
+          if (i.name == value) {
+            socket.emit("correct input", index);
+            return;
+          } else {
+            socket.emit("incorrect input", index);
+          }
         }
       })
-      .catch((err) => socket.emit("incorrect input", index));
+      .catch((err) => console.log(err));
+  });
+
+  socket.on("submit settings", ({ scenes, values }) => {
+    obs
+      .send("GetSceneList")
+      .then((data) => {
+        console.log(scenes, values);
+        for (i of data.scenes) {
+          for (let j = 0; j < scenes.length; j++) {
+            if (i.name !== scenes[j]) {
+              socket.emit("invalid inputs");
+              return false;
+            }
+            if (i.name == scenes[j]) {
+              console.log();
+            }
+          }
+        }
+      })
+      .then((isValid) => {
+        if (!isValid) return;
+        console.log(isValid);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   });
 });
 function changeScene() {

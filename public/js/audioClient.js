@@ -9,7 +9,7 @@ if (navigator.mediaDevices.getUserMedia) {
     .then((stream) => {
       addAudioStream(stream);
     })
-    .catch((err) => console.log(err)); // TODO: resolve
+    .catch((err) => alert("Could not find your device"));
 } else {
   alert("Microphone input is not supported");
 }
@@ -53,14 +53,19 @@ function handleSubmit() {}
 
 socket.on("correct input", (index) => {
   const inputElement = document.querySelector(`.scene-name-${index}`);
-  inputElement.classList.remove("incorrect");
   inputElement.classList.add("correct");
+  inputElement.classList.remove("incorrect");
 });
 
 socket.on("incorrect input", (index) => {
   const inputElement = document.querySelector(`.scene-name-${index}`);
-  inputElement.classList.remove("correct");
   inputElement.classList.add("incorrect");
+  inputElement.classList.remove("correct");
+});
+
+socket.on("invalid inputs", () => {
+  const errMsg = document.querySelector(".err");
+  errMsg.innerHTML = "Make sure all entered scenes are correct";
 });
 
 window.onload = () => {
@@ -69,7 +74,7 @@ window.onload = () => {
       <div>
         <div>
           <h3>Scene name</h3>
-          <input type="text" class="scene-name-${i}" onkeyup="handleInput(${i}, this.value)">
+          <input type="text" class="scene-name-${i} input" onkeyup="handleInput(${i}, this.value)">
           <input type=range class="volume-slider" min=0 max=100 value=1 step=1 oninput="handleSlider(${i}, this.value)">
         </div>
         <h2 class="volume-output-${i}">1</h2>
