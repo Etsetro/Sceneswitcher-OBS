@@ -49,7 +49,30 @@ function handleInput(i, val) {
   socket.emit("input check", { index: i, value: val });
 }
 
-function handleSubmit() {}
+function handleSubmit() {
+  const errMsg = document.querySelector(".err");
+  errMsg.innerHTML = "";
+  const inputs = document.querySelectorAll(".input");
+  const sliders = document.querySelectorAll(".volume-slider");
+
+  let scenes = [];
+  inputs.forEach((item) => {
+    if (item.value) {
+      scenes.push(item.value);
+    }
+  });
+
+  let values = [];
+  for (let i = 0; i < scenes.length; i++) {
+    if (sliders[i].value) {
+      values.push(sliders[i].value);
+    }
+  }
+  socket.emit("submit settings", {
+    scenes: scenes,
+    values: values,
+  });
+}
 
 socket.on("correct input", (index) => {
   const inputElement = document.querySelector(`.scene-name-${index}`);
