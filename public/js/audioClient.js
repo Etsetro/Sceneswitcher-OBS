@@ -2,6 +2,7 @@ const socket = io();
 
 let visualizer = document.querySelector(".visualizer");
 let volumes = [];
+let scenes = [];
 
 if (navigator.mediaDevices.getUserMedia) {
   navigator.mediaDevices
@@ -23,9 +24,6 @@ function addAudioStream(stream) {
   analyser.smoothingTimeConstant = 0.1;
   analyser.fftSize = 1024;
 
-  let dest = ctx.createMediaStreamDestination();
-  let gainNode = ctx.createGain();
-
   source.connect(analyser);
   analyser.connect(javasriptNode);
   javasriptNode.connect(ctx.destination);
@@ -34,6 +32,8 @@ function addAudioStream(stream) {
     let arr = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(arr);
     let values = arr.reduce((a, b) => a + b, 0);
+
+    // TODO: send scene name via socket
 
     visualizer.innerHTML = Math.round(values / 1000);
   };
@@ -45,7 +45,6 @@ function handleSlider(index, val) {
 }
 
 function handleInput(i, val) {
-  console.log(val);
   socket.emit("input check", { index: i, value: val });
 }
 
@@ -84,6 +83,12 @@ socket.on("incorrect input", (index) => {
   const inputElement = document.querySelector(`.scene-name-${index}`);
   inputElement.classList.add("incorrect");
   inputElement.classList.remove("correct");
+});
+
+socket.on("valid inputs", () => {
+  const btn = document.querySelector(".btn-submit");
+  btn.classList.add("saved");
+  btn.innerHTML = "Saved";
 });
 
 socket.on("invalid inputs", () => {

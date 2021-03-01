@@ -53,23 +53,16 @@ io.on("connection", (socket) => {
         console.log(scenes, values);
         for (i of data.scenes) {
           for (let j = 0; j < scenes.length; j++) {
-            if (i.name !== scenes[j]) {
-              socket.emit("invalid inputs");
-              return false;
-            }
             if (i.name == scenes[j]) {
-              console.log();
+              socket.emit("valid inputs");
+              return;
+            } else {
+              socket.emit("invalid inputs");
             }
           }
         }
       })
-      .then((isValid) => {
-        if (!isValid) return;
-        console.log(isValid);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
   });
 });
 function changeScene() {
