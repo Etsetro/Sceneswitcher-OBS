@@ -15,17 +15,17 @@ obs
 app.use(express.static("./public"));
 
 io.on("connection", (socket) => {
-  socket.on("audio input", (body) => {
+  socket.on("audio input", (data) => {
     console.log({
-      volume: parseInt(body.volume),
-      id: body.id,
-      scene: body.scene,
-      limit: parseInt(body.limit),
+      volume: parseInt(data.volume),
+      id: data.id,
+      scene: data.scene,
+      limit: parseInt(data.limit),
     });
     changeScene({
-      volume: parseInt(body.volume),
-      id: body.id,
-      scene: body.scene,
+      volume: parseInt(data.volume),
+      id: data.id,
+      scene: data.scene,
       limit: -25,
     });
   });
