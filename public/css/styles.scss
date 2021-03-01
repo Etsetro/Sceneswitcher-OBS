@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  user-select: none;
 }
 
 .visualizer-cont {
@@ -49,6 +50,13 @@
   font-size: 16px;
   border-radius: 10px;
   cursor: pointer;
+  border: 2px solid black;
+  transition: 0.4s ease-out;
+}
+.btn-submit.saved {
+  color: black;
+  background: white;
+  cursor: default;
 }
 
 h1 {
