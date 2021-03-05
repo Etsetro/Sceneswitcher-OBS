@@ -59,25 +59,30 @@ function handleInput(i, val) {
 function handleSubmit() {
   const errMsg = document.querySelector(".err");
   errMsg.innerHTML = "";
+
   const inputs = document.querySelectorAll(".input");
   const sliders = document.querySelectorAll(".volume-slider");
 
-  let scenes = [];
+  volumes = [];
+  scenes = [];
+
   inputs.forEach((item) => {
     if (item.value) {
       scenes.push(item.value);
     }
   });
+  if (inputs.length == 0) {
+    errMsg.innerHTML = "Please fill at least one field";
+    return;
+  }
 
-  let values = [];
   for (let i = 0; i < scenes.length; i++) {
     if (sliders[i].value) {
-      values.push(sliders[i].value);
+      volumes.push(parseInt(sliders[i].value));
     }
   }
   socket.emit("submit settings", {
     scenes: scenes,
-    values: values,
   });
 }
 
