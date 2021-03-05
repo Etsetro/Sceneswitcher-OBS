@@ -40,11 +40,19 @@ function addAudioStream(stream) {
 }
 
 function handleSlider(index, val) {
+  const btn = document.querySelector(".btn-submit");
+  btn.innerHTML = "Save changes";
+  btn.disabled = false;
+
   const output = document.querySelector(`.volume-output-${index}`);
   output.innerHTML = val;
 }
 
 function handleInput(i, val) {
+  const btn = document.querySelector(".btn-submit");
+  btn.innerHTML = "Save changes";
+  btn.disabled = false;
+
   socket.emit("input check", { index: i, value: val });
 }
 
@@ -87,7 +95,7 @@ socket.on("incorrect input", (index) => {
 
 socket.on("valid inputs", () => {
   const btn = document.querySelector(".btn-submit");
-  btn.classList.add("saved");
+  btn.disabled = true;
   btn.innerHTML = "Saved";
 });
 

@@ -53,7 +53,7 @@
   border: 2px solid black;
   transition: 0.4s ease-out;
 }
-.btn-submit.saved {
+.btn-submit:disabled {
   color: black;
   background: white;
   cursor: default;
