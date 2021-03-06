@@ -17,14 +17,13 @@ app.use(express.static("./public"));
 io.on("connection", (socket) => {
   socket.on("audio input", (data) => {
     console.log({
-      volume: parseInt(data.volume),
       id: data.id,
+      volume: data.volume,
       scene: data.scene,
-      limit: parseInt(data.limit),
     });
     changeScene({
-      volume: parseInt(data.volume),
       id: data.id,
+      volume: data.volume,
       scene: data.scene,
       limit: -25,
     });
@@ -46,11 +45,10 @@ io.on("connection", (socket) => {
       .catch((err) => console.log(err));
   });
 
-  socket.on("submit settings", ({ scenes, values }) => {
+  socket.on("submit settings", ({ scenes }) => {
     obs
       .send("GetSceneList")
       .then((data) => {
-        console.log(scenes, values);
         for (i of data.scenes) {
           for (let j = 0; j < scenes.length; j++) {
             if (i.name == scenes[j]) {
@@ -65,9 +63,9 @@ io.on("connection", (socket) => {
       .catch((err) => console.log(err));
   });
 });
-function changeScene() {
+function changeScene({ id, volume, scene, limit }) {
   obs
-    .send("SetCurrentScene", { "scene-name": "Primary" })
+    .send("SetCurrentScene", { "scene-name": scene })
     .catch((err) => console.log(err));
 }
 
